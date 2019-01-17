@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-
+import { observer } from "mobx-react";
+import authStore from "../../store/authStore";
 // NativeBase Components
 import {
   Text,
@@ -16,9 +17,22 @@ import {
 } from "native-base";
 
 class Login extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: "",
+      password: ""
+    };
+  }
   static navigationOptions = {
     title: "Login"
   };
+  loginUser() {
+    authStore.loginUser(this.state, this.props.navigation);
+  }
+  signupUser() {
+    authStore.signupUser(this.state, this.props.navigation);
+  }
   render() {
     return (
       <Content>
@@ -38,7 +52,11 @@ class Login extends Component {
                     marginBottom: 10
                   }}
                 >
-                  <Input autoCorrect={false} autoCapitalize="none" />
+                  <Input
+                    autoCorrect={false}
+                    autoCapitalize="none"
+                    onChangeText={username => this.setState({ username })}
+                  />
                 </Item>
                 <Body>
                   <Label style={{ color: "white" }}>Password</Label>
@@ -51,23 +69,16 @@ class Login extends Component {
                     autoCorrect={false}
                     secureTextEntry
                     autoCapitalize="none"
+                    onChangeText={password => this.setState({ password })}
                   />
                 </Item>
               </Form>
             </Body>
           </ListItem>
-          <Button
-            full
-            success
-            onPress={() => this.props.navigation.replace("CoffeeList")}
-          >
+          <Button full success onPress={() => this.loginUser()}>
             <Text>Login</Text>
           </Button>
-          <Button
-            full
-            warning
-            onPress={() => this.props.navigation.replace("CoffeeList")}
-          >
+          <Button full warning onPress={() => this.signupUser()}>
             <Text>Register</Text>
           </Button>
         </List>
@@ -79,4 +90,4 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default observer(Login);
